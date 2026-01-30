@@ -318,7 +318,9 @@ const TopNav = () => {
             <button className="p-2 hover:bg-gray-100 rounded-full lg:hidden"><Search size={22}/></button>
             
             <div className="relative p-2 hover:bg-gray-100 rounded-full cursor-pointer">
-              <ShoppingCart size={22} />
+              <Link href={'/main/checkout'}>
+               <ShoppingCart size={22} />
+              </Link>
               <span className="absolute top-1 right-1 bg-black text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">3</span>
             </div>
 
@@ -379,7 +381,7 @@ const TopNav = () => {
                     </div>
                   )}
                   <Link href="/on-sale" className="block font-bold text-lg">On Sale</Link>
-                  <Link href="/new-arrivals" className="block font-bold text-lg">New Arrivals</Link>
+                  <Link href="/newarrivals" className="block font-bold text-lg">New Arrivals</Link>
                 </nav>
               </motion.div>
             </>
