@@ -398,4 +398,3 @@ const ProfileItem = ({ icon, label, danger }) => (
 );
 
 export default TopNav;
- 
