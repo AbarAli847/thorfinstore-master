@@ -1,7 +1,7 @@
 'use client'
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Star } from 'lucide-react'; 
+import { Star, ShoppingBasket } from 'lucide-react';
 
 const NewArrival = () => {
   const products = [
@@ -14,8 +14,7 @@ const NewArrival = () => {
   return (
     <section className="py-10 bg-white">
       <div className="max-w-7xl mx-auto px-6 md:px-14">
-        
-        <h2 className="text-[32px] md:text-[48px] font-[1000] text-center mb-10 uppercase tracking-tighter text-black">
+        <h2 className="text-[32px] md:text-[48px] font-bold text-center mb-10 uppercase tracking-tighter text-black">
           New Arrivals
         </h2>
 
@@ -37,13 +36,18 @@ const NewArrival = () => {
                     alt={product.name} 
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-in-out"
                   />
-                  
-                  {/* Quick View Overlay */}
-                  <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+
+                  {/* Desktop Quick View Overlay */}
+                  <div className="hidden md:flex absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 items-end p-4">
                     <button className="w-full bg-white text-black py-3 rounded-xl text-sm font-bold shadow-xl translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
                       Quick View
                     </button>
                   </div>
+
+                  {/* Mobile Basket Icon */}
+                  <button className="md:hidden absolute bottom-3 right-3 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg active:scale-95">
+                    <ShoppingBasket size={20} className="text-black" />
+                  </button>
                 </div>
 
                 {/* Product Details */}
@@ -54,10 +58,12 @@ const NewArrival = () => {
 
                   {/* Rating */}
                   <div className="flex items-center gap-1">
-                    {[...Array(4)].map((_, i) => (
+                    {[...Array(Math.floor(product.rating))].map((_, i) => (
                       <Star key={i} size={14} className="fill-yellow-400 text-yellow-400" />
                     ))}
-                    <Star size={14} className="fill-gray-200 text-gray-200" />
+                    {[...Array(5 - Math.floor(product.rating))].map((_, i) => (
+                      <Star key={i} size={14} className="fill-gray-200 text-gray-200" />
+                    ))}
                     <span className="text-xs text-black/40 ml-1">{product.rating}/5</span>
                   </div>
 
@@ -74,8 +80,8 @@ const NewArrival = () => {
           </AnimatePresence>
         </div>
       </div>
-      
-      {/* Subtle Divider */}
+
+      {/* Divider */}
       <div className="max-w-7xl mx-auto px-6 md:px-14">
         <hr className="mt-16 border-black/5" />
       </div>

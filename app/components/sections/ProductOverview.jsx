@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Star } from 'lucide-react';
+import { Star, ShoppingBasket } from 'lucide-react';
 
 const ProductOverview = () => {
   const [activeTab, setActiveTab] = useState('All Products');
@@ -24,7 +24,7 @@ const ProductOverview = () => {
       <div className="max-w-7xl mx-auto px-6 md:px-14">
         
         {/* HEADING */}
-        <h2 className="text-[32px] md:text-[40px] font-[1000] text-center mb-10 uppercase tracking-tighter text-black">
+        <h2 className="text-[32px] md:text-[40px] font-bold text-center mb-10 uppercase tracking-tighter text-black">
           PRODUCT OVERVIEW
         </h2>
 
@@ -72,32 +72,41 @@ const ProductOverview = () => {
                 transition={{ duration: 0.3 }}
                 className="group cursor-pointer"
               >
-                {/* Image Container - New Look */}
+                {/* Image Container */}
                 <div className="relative aspect-[3/4] overflow-hidden rounded-[20px] bg-[#F0EEED] mb-4">
                   <img 
                     src={product.image} 
                     alt={product.name} 
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-in-out"
                   />
-                  <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+
+                  {/* Desktop Quick View Overlay */}
+                  <div className="hidden md:flex absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 items-end p-4">
                     <button className="w-full bg-white text-black py-3 rounded-xl text-sm font-bold shadow-xl translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
                       Quick View
                     </button>
                   </div>
+
+                  {/* Mobile Basket Icon */}
+                  <button className="md:hidden absolute bottom-3 right-3 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg active:scale-95">
+                    <ShoppingBasket size={20} className="text-black" />
+                  </button>
                 </div>
 
-                {/* Product Info - New Look */}
+                {/* Product Info */}
                 <div className="space-y-1">
                   <h3 className="font-bold text-lg md:text-xl text-black truncate pr-2">
                     {product.name}
                   </h3>
-                  
+
                   <div className="flex items-center gap-1">
-                    {[...Array(4)].map((_, i) => (
+                    {[...Array(Math.floor(product.rating))].map((_, i) => (
                       <Star key={i} size={14} className="fill-yellow-400 text-yellow-400" />
                     ))}
-                    <Star size={14} className="fill-gray-200 text-gray-200" />
-                    <span className="text-xs text-black/40 ml-1">{product.rating || 4.5}/5</span>
+                    {[...Array(5 - Math.floor(product.rating))].map((_, i) => (
+                      <Star key={i} size={14} className="fill-gray-200 text-gray-200" />
+                    ))}
+                    <span className="text-xs text-black/40 ml-1">{product.rating}/5</span>
                   </div>
 
                   <p className="text-xl md:text-2xl font-bold text-black pt-1">
