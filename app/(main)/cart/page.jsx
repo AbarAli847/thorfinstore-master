@@ -1,62 +1,150 @@
 'use client'
-import React, { useState } from 'react'
-import Image from 'next/image'
+import React, { useState, useEffect } from 'react';
+import { Plus, Minus, Heart } from 'lucide-react';
+import Image from 'next/image';
 
-const Cart_page = () => {
-  const [qty, setQty] = useState(1)
+const Quickview = () => {
+  const [product, setProduct] = useState(null); // Initial null rakha hai
+  const [quantity, setQuantity] = useState(1);
+  const [accordionOpen, setAccordionOpen] = useState({
+    Description: false,
+    Details: false,
+    'Delivery Time': false
+  });
 
-  const increase = () => setQty(qty + 1)
-  const decrease = () => {
-    if (qty > 1) setQty(qty - 1)
+  // ✅ UseEffect: Page load hote hi data get karega
+  useEffect(() => {
+    const savedProduct = localStorage.getItem('selectedProduct');
+    if (savedProduct) {
+      setProduct(JSON.parse(savedProduct));
+    }
+  }, []);
+
+  const toggleAccordion = (section) => {
+    setAccordionOpen(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
+  };
+
+  const accordionContent = {
+    'Description': 'This premium quality outfit offers comfort and style, perfect for casual and semi-formal occasions.',
+    'Details': 'High-quality fabric, machine washable, and long-lasting colors. Perfect for your wardrobe.',
+    'Delivery Time': 'Orders are delivered within 3-5 business days across the country.'
+  };
+
+  // ✅ Agar product load nahi hua toh simple loading screen
+  if (!product) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-white">
+        <p className="text-black font-bold animate-pulse tracking-widest uppercase text-sm">Loading Product...</p>
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-      <div className="bg-white w-full max-w-5xl rounded-sm shadow-lg overflow-hidden flex flex-col md:flex-row p-6 md:p-12 relative">
-        
-        {/* Thumbnails */}
-        <div className="flex flex-row md:flex-col gap-3 mb-4 md:mb-0">
-          {[1, 2, 3].map((img) => (
-            <div key={img} className="w-16 h-20 border border-gray-200 cursor-pointer hover:border-gray-400 relative">
-              <Image src={`/product-${img}.jpg`} alt="thumb" fill className="object-cover" />
-            </div>
-          ))}
-        </div>
+    <div className="bg-gray-100 min-h-screen p-4 md:p-6 font-sans text-[#222]">
+      <div className="max-w-[1000px] mx-auto flex flex-col md:flex-row gap-0 bg-white shadow-sm overflow-hidden">
 
-        {/* Main Image */}
-        <div className="flex-1 px-0 md:px-8 relative group">
-          <div className="w-full h-[500px] bg-gray-50 overflow-hidden relative">
-            <Image 
-              src="/product-main.jpg" 
-              alt="Lightweight Jacket" 
-              fill
-              className="object-cover"
+        {/* LEFT: IMAGES SECTION */}
+        <div className="w-full md:w-[60%] flex gap-4 p-4 pr-0 bg-white">
+          
+          <div className="hidden md:flex flex-col gap-2 min-w-[65px]">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="border border-gray-200 cursor-pointer overflow-hidden rounded-sm hover:border-black transition-all">
+                {/* ✅ Dynamic Thumbnail */}
+                <img 
+                  src={product.image} 
+                  alt="thumbnail" 
+                  className="w-full h-[80px] object-cover"
+                />
+              </div>
+            ))}
+          </div>
+
+          <div className="flex-1 flex justify-start items-start overflow-hidden h-[500px] md:h-[600px]">
+            {/* ✅ Dynamic Main Image */}
+            <img 
+              src={product.image} 
+              alt={product.name} 
+              className="w-full h-full object-cover rounded-sm"
             />
-            <button className="absolute left-0 top-1/2 -translate-y-1/2 bg-gray-800/30 text-white p-2">&lt;</button>
-            <button className="absolute right-0 top-1/2 -translate-y-1/2 bg-gray-800/30 text-white p-2">&gt;</button>
           </div>
         </div>
 
-        {/* Product Details */}
-        <div className="w-full md:w-[400px] flex flex-col pt-6 md:pt-0">
-          <h1 className="text-2xl font-light text-gray-800">Lightweight Jacket</h1>
-          <p className="text-xl font-semibold mt-2 text-gray-900">$58.79</p>
+        {/* RIGHT: DETAILS SECTION */}
+        <div className="w-full md:w-[40%] flex flex-col p-6 md:p-8 pl-4 bg-white">
+          <div className="mb-4">
+            <h1 className="text-[16px] tracking-[3px] uppercase font-bold italic">
+              Thorfin<span className='text-gray-400'>Store</span>
+            </h1>
+          </div>
 
-          <div className="mt-8 flex items-center gap-4">
-            <div className="flex border border-gray-300 h-11">
-              <button onClick={decrease} className="px-4 hover:bg-gray-100 border-r border-gray-300">-</button>
-              <input type="text" value={qty} className="w-12 text-center outline-none" readOnly />
-              <button onClick={increase} className="px-4 hover:bg-gray-100 border-l border-gray-300">+</button>
+          <hr className="border-gray-200 mb-6" />
+
+          {/* ✅ Dynamic Name */}
+          <h2 className="text-[22px] font-bold uppercase tracking-tight mb-2 leading-tight">
+            {product.name}
+          </h2>
+
+          {/* ✅ Dynamic Price */}
+          <p className="text-[18px] text-black mb-6 font-bold">
+            {typeof product.price === 'number' ? `$${product.price}` : product.price}
+          </p>
+
+          <div className="space-y-2 mb-6">
+            <h3 className="text-[11px] font-bold uppercase tracking-[2px] text-gray-400 mb-3">Fabric Details</h3>
+            <div className="grid grid-cols-1 gap-1 text-[13px] text-gray-700">
+              <p><span className="font-bold">Shirt:</span> {product.shirt || 'Premium Lawn'}</p>
+              <p><span className="font-bold">Trouser:</span> {product.trouser || 'Soft Cambric'}</p>
+              <p><span className="font-bold">Dupatta:</span> {product.dupatta || 'Swiss Voil'}</p>
+              <p className="font-bold italic mt-1">Color: <span className="font-normal not-italic text-gray-500">Selected Item</span></p>
             </div>
-            <button className="flex-1 bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-3 rounded-full transition-all uppercase text-sm tracking-wider">
-              Add to Cart
+          </div>
+
+          <div className="flex gap-2 mb-4">
+            <div className="flex border border-gray-300 items-center h-[40px] bg-white">
+              <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="px-3 py-1 hover:bg-gray-100 transition-colors">
+                <Minus size={14} />
+              </button>
+              <span className="px-3 text-[14px] font-bold w-10 text-center">{quantity}</span>
+              <button onClick={() => setQuantity(quantity + 1)} className="px-3 py-1 hover:bg-gray-100 transition-colors">
+                <Plus size={14} />
+              </button>
+            </div>
+            <button className="flex-1 border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors">
+              <Heart size={18} className="text-gray-600" />
             </button>
           </div>
-        </div>
 
+          <div className="space-y-2 mb-8">
+            <button className="w-full border border-black py-3 text-[11px] font-bold uppercase tracking-[2px] hover:bg-black hover:text-white transition-all duration-300">
+              Add to Bag
+            </button>
+            <button className="w-full bg-black text-white py-3 text-[11px] font-bold uppercase tracking-[2px] hover:bg-[#333] transition-all duration-300">
+              Buy It Now
+            </button>
+          </div>
+
+          <div className="border-t border-gray-100">
+            {Object.keys(accordionContent).map((item) => (
+              <div key={item} className="border-b border-gray-100 py-3.5 cursor-pointer group" onClick={() => toggleAccordion(item)}>
+                <div className="flex justify-between items-center">
+                  <span className="text-[11px] font-bold uppercase tracking-[1.5px] text-gray-500 group-hover:text-black transition-colors">{item}</span>
+                  <Plus size={14} className={`text-gray-400 transition-transform duration-300 ${accordionOpen[item] ? 'rotate-45 text-black' : ''}`} />
+                </div>
+                {accordionOpen[item] && (
+                  <p className="text-[12px] text-gray-600 mt-3 leading-relaxed">
+                    {accordionContent[item]}
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Cart_page
+export default Quickview;

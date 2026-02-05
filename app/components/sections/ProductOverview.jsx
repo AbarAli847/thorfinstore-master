@@ -2,18 +2,29 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Star, ShoppingBasket } from 'lucide-react';
+import { useRouter } from 'next/navigation'; // ✅ 1. Router import kiya
 
 const ProductOverview = () => {
+  const router = useRouter(); // ✅ 2. Router initialize kiya
   const [activeTab, setActiveTab] = useState('All Products');
 
-  const categories = ['All Products', 'Women', 'Men', 'Bag', 'Shoes', 'Watches'];
+  const categories = ['All Products', 'Women', 'Braclet', 'Watches'];
 
   const products = [
     { id: 1, name: "Esprit Ruffle Shirt", rating: 4.5, price: 16.64, category: 'Women', image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1000&auto=format&fit=crop" },
     { id: 2, name: "Herschel supply", rating: 4.2, price: 35.31, category: 'Women', image: "https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?q=80&w=1000&auto=format&fit=crop" },
     { id: 3, name: "Only Check Trousers", rating: 4.8, price: 25.50, category: 'Men', image: "https://images.unsplash.com/photo-1488161628813-04466f872be2?q=80&w=1000&auto=format&fit=crop" },
     { id: 4, name: "Classic Trench Coat", rating: 4.5, price: 75.00, category: 'Women', image: "https://images.unsplash.com/photo-1539533018447-63fcce2678e3?q=80&w=1000&auto=format&fit=crop" },
+    
   ];
+
+  // ✅ 3. Click handler function jo data pass karega
+  const handleProductClick = (product) => {
+    // Local storage mein product object ko string banakar save kiya
+    localStorage.setItem('selectedProduct', JSON.stringify(product));
+    // User ko product page par bhej diya
+    router.push('/product/id'); 
+  };
 
   const filteredProducts = activeTab === 'All Products' 
     ? products 
@@ -28,7 +39,7 @@ const ProductOverview = () => {
           PRODUCT OVERVIEW
         </h2>
 
-        {/* CONTROLS */}
+        {/* CONTROLS (Tabs, Filter, Search) */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-12 gap-6">
           <div className="flex flex-wrap justify-center gap-6">
             {categories.map((tab) => (
@@ -48,13 +59,12 @@ const ProductOverview = () => {
           </div>
 
           <div className="flex gap-3">
+             {/* Filter & Search buttons (UI only for now) */}
             <button className="flex items-center gap-2 px-5 py-2 border border-black/10 rounded-sm text-sm font-medium hover:bg-black hover:text-white transition-all">
               <span>Filter</span>
-              <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M1.5 3.5H13.5M3.5 7.5H11.5M5.5 11.5H9.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
             </button>
             <button className="flex items-center gap-2 px-5 py-2 border border-black/10 rounded-sm text-sm font-medium hover:bg-black hover:text-white transition-all">
               <span>Search</span>
-              <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="6.5" cy="6.5" r="5" stroke="currentColor" strokeWidth="1.5"/><path d="M10.5 10.5L13.5 13.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
             </button>
           </div>
         </div>
@@ -70,10 +80,11 @@ const ProductOverview = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.3 }}
+                onClick={() => handleProductClick(product)} // ✅ 4. Div click par function call kiya
                 className="group cursor-pointer"
               >
                 {/* Image Container */}
-                <div className="relative aspect-[3/4] overflow-hidden rounded-[20px] bg-[#F0EEED] mb-4">
+                <div className="relative aspect-[3/4] overflow-hidden  bg-[#F0EEED] mb-4">
                   <img 
                     src={product.image} 
                     alt={product.name} 
@@ -100,11 +111,12 @@ const ProductOverview = () => {
                   </h3>
 
                   <div className="flex items-center gap-1">
-                    {[...Array(Math.floor(product.rating))].map((_, i) => (
-                      <Star key={i} size={14} className="fill-yellow-400 text-yellow-400" />
-                    ))}
-                    {[...Array(5 - Math.floor(product.rating))].map((_, i) => (
-                      <Star key={i} size={14} className="fill-gray-200 text-gray-200" />
+                    {[...Array(5)].map((_, i) => (
+                      <Star 
+                        key={i} 
+                        size={14} 
+                        className={i < Math.floor(product.rating) ? "fill-yellow-400 text-yellow-400" : "fill-gray-200 text-gray-200"} 
+                      />
                     ))}
                     <span className="text-xs text-black/40 ml-1">{product.rating}/5</span>
                   </div>
