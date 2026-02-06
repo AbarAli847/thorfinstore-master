@@ -1,4 +1,4 @@
-'use client'  
+'use client'
 import React, { useState, useEffect } from 'react';
 import { categoryData } from '@/utils/RawaData';
 import { Star, ShoppingBasket } from 'lucide-react';
@@ -9,7 +9,6 @@ export default function CategoryPage({ params }) {
   const [products, setProducts] = useState([]);
   const [slug, setSlug] = useState('');
 
-  //  Server params ko unwrapping aur data fetching
   useEffect(() => {
     const fetchParams = async () => {
       const resolvedParams = await params;
@@ -20,10 +19,9 @@ export default function CategoryPage({ params }) {
     fetchParams();
   }, [params]);
 
-  //  Same logic: Data save karo aur redirect karo
   const handleProductClick = (product) => {
     localStorage.setItem('selectedProduct', JSON.stringify(product));
-    router.push('/product/id'); 
+    router.push(`/product/${product.id}`);
   };
 
   return (
@@ -45,7 +43,7 @@ export default function CategoryPage({ params }) {
             {products.map((product) => (
               <div
                 key={product.id}
-                onClick={() => handleProductClick(product)}  
+                onClick={() => handleProductClick(product)}
                 className="group cursor-pointer"
               >
                 {/* IMAGE */}
