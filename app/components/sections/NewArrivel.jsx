@@ -2,7 +2,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Star, ShoppingBasket } from 'lucide-react';
-import { useRouter } from 'next/navigation'; // Navigation ke liye
+import { useRouter } from 'next/navigation';
 
 const NewArrival = () => {
   const router = useRouter();
@@ -14,7 +14,6 @@ const NewArrival = () => {
     { id: 4, name: "Classic Trench Coat", rating: 4.5, price: 75.00, image: "https://images.unsplash.com/photo-1539533018447-63fcce2678e3?q=80&w=1000&auto=format&fit=crop" },
   ];
 
-  // ✅ Logic: Product save karo aur redirect karo
   const handleProductClick = (product) => {
     localStorage.setItem('selectedProduct', JSON.stringify(product));
     router.push('/product/id');
@@ -22,7 +21,8 @@ const NewArrival = () => {
 
   return (
     <section className="py-10 bg-white">
-      <div className="max-w-7xl mx-auto px-6 md:px-14">
+      
+      <div className="max-w-full mx-auto px-4 md:px-10">
         <h2 className="text-[32px] md:text-[48px] font-bold text-center mb-10 uppercase tracking-tighter text-black">
           New Arrivals
         </h2>
@@ -35,10 +35,10 @@ const NewArrival = () => {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                onClick={() => handleProductClick(product)} //  Click handle
+                onClick={() => handleProductClick(product)}
                 className="group cursor-pointer"
               >
-                <div className="relative aspect-[3/4] overflow-hidden  bg-[#F0EEED] mb-4">
+                <div className="relative aspect-[3/4] overflow-hidden bg-[#F0EEED] mb-4">
                   <img 
                     src={product.image} 
                     alt={product.name} 

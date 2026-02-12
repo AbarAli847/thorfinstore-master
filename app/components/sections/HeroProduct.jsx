@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 const CasualSelection = () => {
   return (
-    <section className="max-w-7xl mx-auto px-6 md:px-14 py-10">
+    <section className="max-w-full mx-auto px-6 md:px-14 py-10">
       {/* Container height set to 500px for a balanced look */}
       <div className="relative w-full bg-[#F0F0F0] rounded-[20px] overflow-hidden flex flex-col md:flex-row items-stretch md:h-[500px]">
         

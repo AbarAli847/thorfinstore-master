@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link'; 
 import Image from 'next/image';
 import { 
-  Search, ShoppingCart, User, ChevronDown, 
+  ShoppingCart, User, ChevronDown, 
   X, Menu, Package, Heart, LogOut, Settings 
 } from 'lucide-react';
 
@@ -12,7 +12,7 @@ const TopNav = () => {
   const [isShopOpen, setIsShopOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isCartOpen, setIsCartOpen] = useState(false); // Cart Drawer State
+  const [isCartOpen, setIsCartOpen] = useState(false); 
   const [showPromo, setShowPromo] = useState(true);
   
   const profileRef = useRef(null);
@@ -62,27 +62,27 @@ const TopNav = () => {
         </AnimatePresence>
 
         {/* 2. Main Nav */}
-        <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-4 flex items-center justify-between gap-4">
-          
-          {/* Logo */}
+        <div className="w-full px-4 md:px-10 py-4 flex items-center justify-between">
+  
+          {/* Logo - Left */}
           <div className="flex items-center gap-3">
             <button onClick={() => setIsMobileMenuOpen(true)} className="md:hidden p-2 hover:bg-gray-100 rounded-full">
               <Menu size={24} />
             </button>
-            <Link href="/" className="text-2xl lg:text-3xl font-[1000] tracking-tighter hover:opacity-80 transition-opacity">
+            <Link href="/" className="text-3xl lg:text-4xl font-[1000] tracking-tighter hover:opacity-80 transition-opacity">
               THORFIN<span className="text-gray-400">STORE</span>
             </Link>
           </div>
 
-          {/* Desktop Links */}
-          <div className="hidden md:flex items-center gap-6 lg:gap-8">
+          {/* Desktop Links - Centered & Larger */}
+          <div className="hidden md:flex items-center gap-8 lg:gap-12 absolute left-1/2 -translate-x-1/2">
             <div 
-              className="relative py-2 group cursor-pointer flex items-center gap-1 font-medium"
+              className="relative py-2 group cursor-pointer flex items-center gap-1 font-bold text-[14px]"
               onMouseEnter={() => setIsShopOpen(true)}
               onMouseLeave={() => setIsShopOpen(false)}
             >
-              <span>Shop</span>
-              <ChevronDown size={14} className={`transition-transform duration-300 ${isShopOpen ? 'rotate-180' : ''}`} />
+              <span className='text-[17px]'>Shop</span>
+              <ChevronDown size={16} className={`transition-transform duration-300 ${isShopOpen ? 'rotate-180' : ''}`} />
               
               <AnimatePresence>
                 {isShopOpen && (
@@ -104,30 +104,19 @@ const TopNav = () => {
               </AnimatePresence>
             </div>
             
-            <Link href="/on-sale" className="font-medium hover:text-gray-500 transition-colors">On Sale</Link>
-            <Link href="/newarrivals" className="font-medium hover:text-gray-500 transition-colors">New Arrivals</Link>
-            <Link href="/brands" className="font-medium hover:text-gray-500 transition-colors">Brands</Link>
+            <Link href="/on-sale" className="font-bold text-[17px] hover:text-gray-500 transition-colors">On Sale</Link>
+            <Link href="/newarrivals" className="font-bold text-[17px] hover:text-gray-500 transition-colors">New Arrivals</Link>
+            <Link href="/clearence" className="font-bold text-[17px]  text-red-500 transition-colors">clearence</Link>
           </div>
 
-          {/* Search Bar */}
-          <div className="flex-1 max-w-md relative hidden lg:block group">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-black transition-colors" size={18} />
-            <input 
-              type="text" placeholder="Search for products..." 
-              className="w-full bg-[#F0F0F0] py-2.5 pl-11 pr-4 rounded-full outline-none focus:ring-2 focus:ring-black/5 focus:bg-white transition-all"
-            />
-          </div>
-
-          {/* Icons Area */}
+          {/* Icons Area - Right */}
           <div className="flex items-center gap-2 md:gap-4">
-            <button className="p-2 hover:bg-gray-100 rounded-full lg:hidden"><Search size={22}/></button>
-            
             {/* Basket Icon Trigger */}
             <div 
               onClick={() => setIsCartOpen(true)} 
               className="relative p-2 hover:bg-gray-100 rounded-full cursor-pointer"
             >
-              <ShoppingCart size={22} />
+              <ShoppingCart size={24} />
               <span className="absolute top-1 right-1 bg-black text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">3</span>
             </div>
 
@@ -137,7 +126,7 @@ const TopNav = () => {
                 onClick={() => setIsProfileOpen(!isProfileOpen)}
                 className={`p-2.5 rounded-full transition-all duration-300 ${isProfileOpen ? 'bg-black text-white' : 'hover:bg-gray-100'}`}
               >
-                <User size={22} />
+                <User size={24} />
               </button>
 
               <AnimatePresence>
@@ -169,7 +158,6 @@ const TopNav = () => {
       <AnimatePresence>
         {isCartOpen && (
           <>
-            {/* Dark Overlay */}
             <motion.div 
               initial={{ opacity: 0 }} 
               animate={{ opacity: 1 }} 
@@ -178,7 +166,6 @@ const TopNav = () => {
               className="fixed inset-0 bg-black/60 z-[200] backdrop-blur-[2px]"
             />
 
-            {/* Sidebar Drawer */}
             <motion.div 
               initial={{ x: '100%' }} 
               animate={{ x: 0 }} 
@@ -186,7 +173,6 @@ const TopNav = () => {
               transition={{ type: 'tween', duration: 0.4, ease: "easeInOut" }}
               className="fixed top-0 right-0 h-full w-full max-w-[320px] bg-white z-[201] flex flex-col shadow-2xl"
             >
-              {/* Header */}
               <div className="p-6 flex justify-between items-center border-b border-gray-200">
                 <h2 className="text-[16px] font-bold uppercase tracking-widest text-[#333]">Your Cart</h2>
                 <button 
@@ -197,7 +183,6 @@ const TopNav = () => {
                 </button>
               </div>
               
-              {/* Items List */}
               <div className="flex-1 overflow-y-auto px-6 py-4 space-y-6">
                 <CartItem 
                   image="https://5.imimg.com/data5/SELLER/Default/2022/12/SC/TM/SJ/94630792/cotton-ladies-suit.jpg" 
@@ -213,7 +198,6 @@ const TopNav = () => {
                 />
               </div>
 
-              {/* Footer */}
               <div className="p-6 border-t border-gray-200 mt-auto space-y-4">
                 <div className="text-[16px] text-[#222] flex justify-between">
                   <span>Total:</span> 
@@ -238,13 +222,41 @@ const TopNav = () => {
         )}
       </AnimatePresence>
 
-      {/* Mobile Sidebar (Standard Nav) */}
-      {/* ... Existing Mobile Menu Code ... */}
+      {/* Mobile Sidebar */}
+      <AnimatePresence>
+          {isMobileMenuOpen && (
+            <>
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsMobileMenuOpen(false)} className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[110]" />
+              <motion.div initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }} transition={{ type: 'spring', damping: 25 }} className="fixed top-0 left-0 bottom-0 w-[280px] bg-white z-[120] p-6 shadow-2xl">
+                <div className="flex justify-between items-center mb-8">
+                  <span className="font-black text-xl">THORFIN</span>
+                  <X onClick={() => setIsMobileMenuOpen(false)} className="cursor-pointer" />
+                </div>
+                <nav className="space-y-6">
+                  <div onClick={() => setIsShopOpen(!isShopOpen)} className="flex justify-between items-center font-bold text-lg cursor-pointer">
+                    Shop <ChevronDown size={20} className={isShopOpen ? 'rotate-180' : ''} />
+                  </div>
+                  {isShopOpen && (
+                    <div className="pl-4 space-y-4 text-gray-500 font-medium">
+                      {shopCategories.map((item) => (
+                        <Link key={item.slug} href={`/category/${item.slug}`} onClick={() => setIsMobileMenuOpen(false)} className="block">
+                          {item.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                  <Link href="/on-sale" className="block font-bold text-lg">On Sale</Link>
+                  <Link href="/newarrivals" className="block font-bold text-lg">New Arrivals</Link>
+                  <Link href="/brands" className="block font-bold text-lg">Brands</Link>
+                </nav>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
     </>
   );
 };
 
-// Cart Item Component (Helper)
 const CartItem = ({ image, name, price, qty }) => (
   <div className="flex gap-4 items-center group">
     <div className="w-[60px] h-[80px] relative flex-shrink-0 bg-[#f7f7f7] border border-[#eee] overflow-hidden">

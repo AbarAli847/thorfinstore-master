@@ -12,7 +12,7 @@ const Quickview = () => {
     'Delivery Time': false
   });
 
-  // ✅ UseEffect: Page load hote hi data get karega
+  //  UseEffect: Page load hote hi data get karega
   useEffect(() => {
     const savedProduct = localStorage.getItem('selectedProduct');
     if (savedProduct) {

@@ -10,7 +10,7 @@ const Quickview = () => {
     Details: false,
     'Delivery Time': false
   });
-  const [isImageOpen, setIsImageOpen] = useState(false); // ✅ Fullscreen image state
+  const [isImageOpen, setIsImageOpen] = useState(false); //Fullscreen image state
 
   useEffect(() => {
     const savedProduct = localStorage.getItem('selectedProduct');
