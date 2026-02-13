@@ -1,150 +1,154 @@
 'use client'
-import React, { useState, useEffect } from 'react';
-import { Plus, Minus, Heart } from 'lucide-react';
-import Image from 'next/image';
+import React, { useState } from 'react'
+import { ShieldCheck, Truck, CreditCard, Banknote } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import Image from 'next/image'
+import Success from '../Success/page' // Correct path
 
-const Quickview = () => {
-  const [product, setProduct] = useState(null); // Initial null rakha hai
-  const [quantity, setQuantity] = useState(1);
-  const [accordionOpen, setAccordionOpen] = useState({
-    Description: false,
-    Details: false,
-    'Delivery Time': false
-  });
+const Customer_info = () => {
+  const [paymentMethod, setPaymentMethod] = useState('cod')
+  const [showSuccess, setShowSuccess] = useState(false)
 
-  //  UseEffect: Page load hote hi data get karega
-  useEffect(() => {
-    const savedProduct = localStorage.getItem('selectedProduct');
-    if (savedProduct) {
-      setProduct(JSON.parse(savedProduct));
-    }
-  }, []);
-
-  const toggleAccordion = (section) => {
-    setAccordionOpen(prev => ({
-      ...prev,
-      [section]: !prev[section]
-    }));
-  };
-
-  const accordionContent = {
-    'Description': 'This premium quality outfit offers comfort and style, perfect for casual and semi-formal occasions.',
-    'Details': 'High-quality fabric, machine washable, and long-lasting colors. Perfect for your wardrobe.',
-    'Delivery Time': 'Orders are delivered within 3-5 business days across the country.'
-  };
-
-  // ✅ Agar product load nahi hua toh simple loading screen
-  if (!product) {
-    return (
-      <div className="h-screen flex items-center justify-center bg-white">
-        <p className="text-black font-bold animate-pulse tracking-widest uppercase text-sm">Loading Product...</p>
-      </div>
-    );
+  const handlePlaceOrder = () => {
+    // Show success modal
+    setShowSuccess(true)
   }
 
   return (
-    <div className="bg-gray-100 min-h-screen p-4 md:p-6 font-sans text-[#222]">
-      <div className="max-w-[1000px] mx-auto flex flex-col md:flex-row gap-0 bg-white shadow-sm overflow-hidden">
+    <div className="min-h-screen bg-[#f4f4f4] flex items-center justify-center p-4 md:p-10 font-sans text-[#222]">
+      <div className="max-w-[1100px] w-full bg-white shadow-2xl flex flex-col md:flex-row overflow-hidden rounded-sm border border-gray-100">
 
-        {/* LEFT: IMAGES SECTION */}
-        <div className="w-full md:w-[60%] flex gap-4 p-4 pr-0 bg-white">
-          
-          <div className="hidden md:flex flex-col gap-2 min-w-[65px]">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="border border-gray-200 cursor-pointer overflow-hidden rounded-sm hover:border-black transition-all">
-                {/* ✅ Dynamic Thumbnail */}
-                <img 
-                  src={product.image} 
-                  alt="thumbnail" 
-                  className="w-full h-[80px] object-cover"
-                />
-              </div>
-            ))}
+        {/* LEFT IMAGES */}
+        <div className="w-full md:w-[50%] bg-[#fafafa] p-6 flex gap-2">
+          <div className="relative h-[550px] flex-1 overflow-hidden group">
+            <Image
+              src="https://images.unsplash.com/photo-1506193095-80bc749473f2?w=600"
+              alt="Product"
+              fill
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+            <div className="absolute top-10 right-4 bg-white/90 p-3 rounded-full shadow-lg flex flex-col items-center">
+              <Truck size={22} />
+              <span className="text-[7px] font-bold uppercase mt-1 text-center">
+                Expedited<br />Shipping
+              </span>
+            </div>
           </div>
 
-          <div className="flex-1 flex justify-start items-start overflow-hidden h-[500px] md:h-[600px]">
-            {/* ✅ Dynamic Main Image */}
-            <img 
-              src={product.image} 
-              alt={product.name} 
-              className="w-full h-full object-cover rounded-sm"
+          <div className="relative h-[550px] flex-1 overflow-hidden">
+            <Image
+              src="https://images.unsplash.com/photo-1506193095-80bc749473f2?w=600"
+              alt="Detail"
+              fill
+              className="object-cover"
             />
+            <div className="absolute bottom-10 left-4 bg-white/90 p-3 rounded-full shadow-lg flex flex-col items-center">
+              <ShieldCheck size={22} />
+              <span className="text-[7px] font-bold uppercase mt-1 text-center">
+                Secure<br />Payment
+              </span>
+            </div>
           </div>
         </div>
 
-        {/* RIGHT: DETAILS SECTION */}
-        <div className="w-full md:w-[40%] flex flex-col p-6 md:p-8 pl-4 bg-white">
-          <div className="mb-4">
-            <h1 className="text-[16px] tracking-[3px] uppercase font-bold italic">
-              Thorfin<span className='text-gray-400'>Store</span>
-            </h1>
-          </div>
-
-          <hr className="border-gray-200 mb-6" />
-
-          {/* ✅ Dynamic Name */}
-          <h2 className="text-[22px] font-bold uppercase tracking-tight mb-2 leading-tight">
-            {product.name}
-          </h2>
-
-          {/* ✅ Dynamic Price */}
-          <p className="text-[18px] text-black mb-6 font-bold">
-            {typeof product.price === 'number' ? `$${product.price}` : product.price}
-          </p>
-
-          <div className="space-y-2 mb-6">
-            <h3 className="text-[11px] font-bold uppercase tracking-[2px] text-gray-400 mb-3">Fabric Details</h3>
-            <div className="grid grid-cols-1 gap-1 text-[13px] text-gray-700">
-              <p><span className="font-bold">Shirt:</span> {product.shirt || 'Premium Lawn'}</p>
-              <p><span className="font-bold">Trouser:</span> {product.trouser || 'Soft Cambric'}</p>
-              <p><span className="font-bold">Dupatta:</span> {product.dupatta || 'Swiss Voil'}</p>
-              <p className="font-bold italic mt-1">Color: <span className="font-normal not-italic text-gray-500">Selected Item</span></p>
+        {/* RIGHT FORM */}
+        <div className="w-full md:w-[50%] p-8 md:p-12">
+          <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
+            {/* Shipping Fields */}
+            <div className="space-y-3">
+              <h3 className="text-[10px] font-black uppercase tracking-[2px] text-gray-400">
+                Shipping Address
+              </h3>
+              <input className="w-full border p-3 text-xs" placeholder="Full Name" />
+              <input className="w-full border p-3 text-xs" placeholder="Email" />
+              <input className="w-full border p-3 text-xs" placeholder="Address Line 1" />
+              <input className="w-full border p-3 text-xs" placeholder="City" />
             </div>
-          </div>
 
-          <div className="flex gap-2 mb-4">
-            <div className="flex border border-gray-300 items-center h-[40px] bg-white">
-              <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="px-3 py-1 hover:bg-gray-100 transition-colors">
-                <Minus size={14} />
-              </button>
-              <span className="px-3 text-[14px] font-bold w-10 text-center">{quantity}</span>
-              <button onClick={() => setQuantity(quantity + 1)} className="px-3 py-1 hover:bg-gray-100 transition-colors">
-                <Plus size={14} />
-              </button>
-            </div>
-            <button className="flex-1 border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors">
-              <Heart size={18} className="text-gray-600" />
-            </button>
-          </div>
+            {/* Payment Method */}
+            <div>
+              <h3 className="text-[10px] font-black uppercase tracking-[2px] text-gray-400 mb-4">
+                Payment Method
+              </h3>
 
-          <div className="space-y-2 mb-8">
-            <button className="w-full border border-black py-3 text-[11px] font-bold uppercase tracking-[2px] hover:bg-black hover:text-white transition-all duration-300">
-              Add to Bag
-            </button>
-            <button className="w-full bg-black text-white py-3 text-[11px] font-bold uppercase tracking-[2px] hover:bg-[#333] transition-all duration-300">
-              Buy It Now
-            </button>
-          </div>
+              <div className="grid grid-cols-2 gap-3 mb-4">
+                <button
+                  type="button"
+                  onClick={() => setPaymentMethod('cod')}
+                  className={`p-2 border text-[10px] font-bold uppercase ${
+                    paymentMethod === 'cod'
+                      ? 'bg-black text-white'
+                      : 'border-gray-200 text-gray-400'
+                  }`}
+                >
+                  <Banknote size={14} /> Cash on Delivery
+                </button>
 
-          <div className="border-t border-gray-100">
-            {Object.keys(accordionContent).map((item) => (
-              <div key={item} className="border-b border-gray-100 py-3.5 cursor-pointer group" onClick={() => toggleAccordion(item)}>
-                <div className="flex justify-between items-center">
-                  <span className="text-[11px] font-bold uppercase tracking-[1.5px] text-gray-500 group-hover:text-black transition-colors">{item}</span>
-                  <Plus size={14} className={`text-gray-400 transition-transform duration-300 ${accordionOpen[item] ? 'rotate-45 text-black' : ''}`} />
-                </div>
-                {accordionOpen[item] && (
-                  <p className="text-[12px] text-gray-600 mt-3 leading-relaxed">
-                    {accordionContent[item]}
-                  </p>
-                )}
+                <button
+                  type="button"
+                  onClick={() => setPaymentMethod('advance')}
+                  className={`p-2 border text-[10px] font-bold uppercase ${
+                    paymentMethod === 'advance'
+                      ? 'bg-black text-white'
+                      : 'border-gray-200 text-gray-400'
+                  }`}
+                >
+                  <CreditCard size={14} /> Advance Payment
+                </button>
               </div>
-            ))}
-          </div>
+
+              {/* Advance Payment Fields */}
+              {paymentMethod === 'advance' && (
+                <div className="space-y-3">
+                  <input
+                    type="text"
+                    placeholder="Your Account Number"
+                    className="w-full border p-3 text-xs"
+                  />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="w-full border p-3 text-xs"
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* Order Summary */}
+            <div>
+              <h3 className="text-[10px] font-black uppercase tracking-[2px] text-gray-400 mb-4">
+                Order Summary
+              </h3>
+              <div className="border p-3 bg-gray-50">
+                <div className="flex justify-between text-[11px] text-gray-500">
+                  <span>Subtotal: Rs. 15,000</span>
+                  <span>Shipping: Rs. 500</span>
+                </div>
+                <div className="flex justify-between text-[13px] font-black border-t pt-3 mt-2">
+                  <span>TOTAL</span>
+                  <span>Rs. 15,500</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Place Order */}
+            <button
+              type="button"
+              onClick={handlePlaceOrder}
+              className="w-full bg-black text-white py-4 text-[11px] font-black uppercase tracking-[4px]"
+            >
+              Place Order
+            </button>
+          </form>
         </div>
       </div>
-    </div>
-  );
-};
 
-export default Quickview;
+      {/* Success Modal */}
+      <AnimatePresence>
+        {showSuccess && <Success onClose={() => setShowSuccess(false)} />}
+      </AnimatePresence>
+    </div>
+  )
+}
+
+export default Customer_info
