@@ -1,111 +1,152 @@
-import React from 'react';
-import { categoryData } from '@/utils/RawaData';
-import { Star, ShoppingCart, Minus, Plus } from 'lucide-react';
-import Link from 'next/link';
+'use client'
+import React, { useState, useEffect } from 'react';
+import { Plus, Minus, Heart, Eye } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
-async function getSingleProduct(id) {
-  const allProducts = Object.values(categoryData).flat();
-  return allProducts.find((p) => p.id === id);
-}
+const Quickview = () => {
+  const router = useRouter();
+  const [product, setProduct] = useState(null);
+  const [quantity, setQuantity] = useState(1);
+  const [accordionOpen, setAccordionOpen] = useState({
+    Description: false,
+    Details: false,
+    'Delivery Time': false
+  });
+  const [isImageOpen, setIsImageOpen] = useState(false);
 
-export default async function ProductDetailPage({ params }) {
-  const { id } = await params;
-  const product = await getSingleProduct(id);
+  const accordionContent = {
+    'Description': 'This premium quality outfit offers comfort and style, perfect for casual and semi-formal occasions.',
+    'Details': 'High-quality fabric, machine washable, and long-lasting colors.',
+    'Delivery Time': 'Orders are delivered within 3-5 business days across the country.'
+  };
 
-  if (!product) return <div className="p-20 text-center font-black">PRODUCT NOT FOUND</div>;
+  useEffect(() => {
+    const savedProduct = localStorage.getItem('selectedProduct');
+    if (savedProduct) {
+      setProduct(JSON.parse(savedProduct));
+    }
+  }, []);
+
+  // Handle Buy It Now → Login Page
+  const handleAuthAction = (actionType) => {
+    if (actionType === 'buy') {
+      // Sirf Login page pe redirect
+      router.push('/login');
+    } else if (actionType === 'add') {
+      // Optional: Add to Bag alert
+      alert('Add to Bag clicked!');
+    }
+  };
+
+  const toggleAccordion = (section) => {
+    setAccordionOpen(prev => ({ ...prev, [section]: !prev[section] }));
+  };
+
+  if (!product) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-white">
+        <p className="text-black font-medium animate-pulse uppercase tracking-widest text-sm">
+          Loading Product Details...
+        </p>
+      </div>
+    );
+  }
 
   return (
-    <div className="max-w-[1240px] mx-auto px-4 md:px-10 py-10">
-      
-      {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-sm text-gray-400 mb-8">
-        <Link href="/">Home</Link>
-        <span>/</span>
-        <span className="text-black font-semibold">Shop</span>
-      </nav>
+    <div className="bg-gray-100 min-h-screen flex items-center justify-center p-4 md:p-6 font-sans text-[#222]">
+      <div className="max-w-[1100px] w-full mx-auto flex flex-col md:flex-row gap-0 bg-white shadow-sm overflow-hidden rounded-sm">
 
-      {/* MAIN FLEX CONTAINER */}
-      <div className="flex flex-col lg:flex-row gap-10 xl:gap-14">
-        
-        {/* LEFT SIDE: Image (W-1/2 on desktop) */}
-        <div className="w-full lg:w-[45%]">
-          <div className="bg-[#F0EEED] rounded-[20px] overflow-hidden aspect-[0.9/1]">
-            <img 
-              src={product.image} 
-              alt={product.name} 
-              className="w-full h-28 object-cover"
-            />
-          </div>
-        </div>
-
-        {/* RIGHT SIDE: Details (W-1/2 on desktop) */}
-        <div className="w-full lg:w-[55%] flex flex-col">
-          <h1 className="text-4xl md:text-5xl font-black uppercase mb-3 tracking-tighter italic">
-            {product.name}
-          </h1>
-
-          {/* Rating */}
-          <div className="flex items-center gap-2 mb-4">
-            <div className="flex text-yellow-400">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} size={20} className={i < 4 ? "fill-current" : "text-gray-200"} />
-              ))}
-            </div>
-            <span className="text-sm font-medium">4.5/5</span>
-          </div>
-
-          {/* Price */}
-          <div className="flex items-center gap-4 mb-6">
-            <span className="text-3xl font-bold">${product.price}</span>
-            <span className="text-2xl text-gray-300 line-through font-bold">$200</span>
-            <span className="bg-red-100 text-red-500 px-3 py-1 rounded-full text-xs font-bold">-30%</span>
-          </div>
-
-          <p className="text-gray-500 mb-8 border-b border-gray-100 pb-8 leading-relaxed">
-            This graphic t-shirt which is perfect for any occasion. Crafted from a soft and breathable fabric, it offers superior comfort and style.
-          </p>
-
-          {/* Color Select */}
-          <div className="mb-6 border-b border-gray-100 pb-6">
-            <p className="text-gray-400 text-sm mb-4 font-semibold uppercase">Select Colors</p>
-            <div className="flex gap-3">
-              <div className="w-9 h-9 rounded-full bg-[#4F4631] cursor-pointer flex items-center justify-center border border-black/10">
-                <div className="text-white text-xs">✓</div>
+        {/* LEFT: IMAGE SECTION */}
+        <div className="w-full md:w-[50%] flex flex-col-reverse md:flex-row gap-3 p-4 md:p-5 bg-white relative">
+          <div className="flex flex-row md:flex-col gap-2 overflow-x-auto md:overflow-visible">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="border border-gray-100 overflow-hidden rounded-md hover:border-black min-w-[70px] md:min-w-[70px] transition-all">
+                <img src={product.image} alt="thumb" className="w-full h-[70px] md:h-[80px] object-cover cursor-pointer" />
               </div>
-              <div className="w-9 h-9 rounded-full bg-[#314F4A] cursor-pointer" />
-              <div className="w-9 h-9 rounded-full bg-[#31344F] cursor-pointer" />
-            </div>
+            ))}
           </div>
 
-          <div className="mb-8 border-b border-gray-100 pb-8">
-            <p className="text-gray-400 text-sm mb-4 font-semibold uppercase">Choose Size</p>
-            <div className="flex flex-wrap gap-3">
-              {['Small', 'Medium', 'Large', 'X-Large'].map((size) => (
-                <button 
-                  key={size}
-                  className={`px-6 py-3 rounded-full text-sm font-medium transition-all ${size === 'Large' ? 'bg-black text-white' : 'bg-[#F0F0F0] text-gray-600 hover:bg-black hover:text-white'}`}
-                >
-                  {size}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Quantity & Button */}
-          <div className="flex gap-4 items-center">
-            <div className="flex items-center justify-between bg-[#F0F0F0] rounded-full px-5 py-4 w-36">
-              <Minus className="cursor-pointer w-5 h-5" />
-              <span className="font-bold text-lg">1</span>
-              <Plus className="cursor-pointer w-5 h-5" />
-            </div>
-            
-            <button className="flex-1 bg-black text-white py-4 rounded-full font-bold text-sm uppercase tracking-widest hover:bg-gray-800 transition-all">
-              Add to Cart
+          <div className="flex-1 overflow-hidden h-[350px] sm:h-[450px] md:h-[550px] rounded-lg relative">
+            <img src={product.image} alt={product.name} className="w-full h-full object-cover transition-transform duration-500 hover:scale-105 rounded-lg" />
+            <button 
+              onClick={() => setIsImageOpen(true)} 
+              className="absolute top-3 right-3 bg-white/80 p-2 rounded-full shadow-md hover:bg-white transition-all"
+            >
+              <Eye size={20} />
             </button>
           </div>
         </div>
 
+        {/* RIGHT: DETAILS */}
+        <div className="w-full md:w-[50%] flex flex-col p-6 md:p-8 md:pl-4 bg-white">
+          <div className="mb-3">
+            <h1 className="text-[14px] tracking-[3px] uppercase font-bold italic">
+              Thorfin<span className='text-gray-400 font-bold'>Store</span>
+            </h1>
+          </div>
+          <hr className="border-gray-200 mb-6" />
+
+          <h2 className="text-[22px] md:text-[24px] font-medium uppercase mb-2 leading-tight tracking-tight">{product.name}</h2>
+          <p className="text-[20px] text-black mb-6 font-medium">Rs. {product.price}</p>
+
+          <div className="space-y-2 mb-6 text-[13px] border-black/10 pl-4">
+            <p><span className="text-gray-400 uppercase text-[15px] block mb-1">Fabric</span> Premium Cotton</p>
+            <p><span className="text-gray-400 uppercase text-[15px] block mb-1">Fit</span> Regular Style</p>
+          </div>
+
+          <div className="flex gap-2 mb-5">
+            <div className="flex border border-black/10 items-center h-[45px] bg-gray-50">
+              <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="px-4 transition-colors"><Minus size={14}/></button>
+              <span className="px-2 font-medium w-10 text-center text-sm">{quantity}</span>
+              <button onClick={() => setQuantity(quantity + 1)} className="px-4 transition-colors"><Plus size={14}/></button>
+            </div>
+            <button className="flex-1 border border-black/10 flex items-center justify-center hover:bg-black hover:text-white transition-all text-gray-400">
+              <Heart size={18}/>
+            </button>
+          </div>
+
+          <div className="space-y-2 mb-6">
+            {/* Action Buttons */}
+            <button 
+              onClick={() => handleAuthAction('add')}
+              className="w-full bg-white border border-black text-black py-3.5 text-[11px] font-medium uppercase tracking-[2px] hover:bg-black hover:text-white transition-all duration-300"
+            >
+              Add to Bag
+            </button>
+            <button 
+              onClick={() => handleAuthAction('buy')}
+              className="w-full bg-black text-white py-3.5 text-[11px] font-medium uppercase tracking-[2px] hover:bg-gray-800 transition-all duration-300"
+            >
+              Buy It Now
+            </button>
+          </div>
+
+          {/* Accordion */}
+          <div className="border-t border-gray-100 pt-2">
+            {Object.keys(accordionContent).map((item) => (
+              <div key={item} className="border-b border-gray-100 py-3 cursor-pointer group" onClick={() => toggleAccordion(item)}>
+                <div className="flex justify-between items-center text-[10px] font-medium uppercase tracking-widest text-gray-400 group-hover:text-black transition-colors">
+                  <span>{item}</span>
+                  <Plus size={12} className={`transition-transform duration-300 ${accordionOpen[item] ? 'rotate-45 text-black' : ''}`} />
+                </div>
+                {accordionOpen[item] && (
+                  <p className="text-[12px] text-gray-500 mt-3 leading-relaxed font-light">{accordionContent[item]}</p>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
+
+      {/* Fullscreen Image Modal */}
+      {isImageOpen && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-[999] p-4">
+          <img src={product.image} alt={product.name} className="max-h-full max-w-full object-contain rounded-md" />
+          <button onClick={() => setIsImageOpen(false)} className="absolute top-4 right-4 text-white text-2xl font-bold hover:text-gray-300">&times;</button>
+        </div>
+      )}
     </div>
   );
-}
+};
+
+export default Quickview;

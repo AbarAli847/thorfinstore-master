@@ -1,9 +1,10 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 
 const CasualSelection = () => {
   return (
-    <section className="max-w-7xl mx-auto px-6 md:px-14 py-10">
+    <section className="max-w-full mx-auto px-6 md:px-14 py-10">
       {/* Container height set to 500px for a balanced look */}
       <div className="relative w-full bg-[#F0F0F0] rounded-[20px] overflow-hidden flex flex-col md:flex-row items-stretch md:h-[500px]">
         
@@ -31,10 +32,10 @@ const CasualSelection = () => {
             tincidunt ut vitae elit risus. Tempor egestas condimentum.
           </p>
 
-          <button className="flex items-center gap-2 text-black font-bold text-lg border-b-2 border-black pb-1 hover:gap-4 transition-all duration-300 group">
+          <Link href={'/newarrivals'} className="flex items-center gap-2 text-black font-bold text-lg border-b-2 border-black pb-1 hover:gap-4 transition-all duration-300 group">
             Shop Collection 
             <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-          </button>
+          </Link>
         </div>
       </div>
     </section>

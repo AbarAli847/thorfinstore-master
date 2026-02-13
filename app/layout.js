@@ -1,33 +1,23 @@
-// app/layout.js
+ // app/layout.js
 import "./globals.css";
 import TopNav from "./components/layouts/TopNav";
 import BottomNav from "./components/layouts/BottomNav";
 
-// ✅ Correct Google Fonts import
-import { Inter } from "next/font/google";
-
-// Inter font setup
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-});
-
 export const metadata = {
-  title: "Thorfinstore",
-  description: "Thorfinstore e-commerce site built with Next.js",
+  title: "THORFIN STORE",
+  description: "Premium E-commerce Store",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} antialiased`}>
-        {/* Top Navigation */}
+      <head>
+        {/* Direct Google Font Import taake Turbopack error na de */}
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" />
+      </head>
+      <body className="antialiased font-sans bg-white text-black">
         <TopNav />
-
-        {/* Main Content */}
         <main>{children}</main>
-
-        {/* Bottom Navigation */}
         <BottomNav />
       </body>
     </html>

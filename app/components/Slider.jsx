@@ -27,10 +27,10 @@ const AnimatedCounter = ({ value }) => {
 const Hero = () => {
   return (
     <div className="w-full bg-[#F2F0F1] overflow-hidden">
-      {/* flex-col-reverse se mobile par Image uper aur Text niche aayega */}
-      <header className="max-w-7xl mx-auto flex flex-col-reverse md:flex-row items-start justify-between px-6 md:px-10 lg:px-42 pt-2">
+     
+      <header className="max-w-full mx-auto flex flex-col-reverse md:flex-row items-start justify-between px-6 md:px-10 lg:px-42 pt-2">
         
-        {/* LEFT: Content - Starting exactly from top with no extra top padding */}
+       
         <section className="w-full md:w-1/2 flex flex-col z-10 py-10 md:pt-16 md:pb-10">
           <motion.h1
             initial={{ opacity: 0, x: -50 }}
