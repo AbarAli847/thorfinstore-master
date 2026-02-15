@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from 'react'
-import { ShieldCheck, Truck, CreditCard, Banknote } from 'lucide-react'
+import { ShieldCheck, Truck, CreditCard, Banknote, Copy } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import Success from '../Success/page' // Correct path
@@ -8,10 +8,16 @@ import Success from '../Success/page' // Correct path
 const Customer_info = () => {
   const [paymentMethod, setPaymentMethod] = useState('cod')
   const [showSuccess, setShowSuccess] = useState(false)
+  const accountNumber = "1234-5678-9012-3456" // Your account number
 
   const handlePlaceOrder = () => {
     // Show success modal
     setShowSuccess(true)
+  }
+
+  const handleCopyAccount = () => {
+    navigator.clipboard.writeText(accountNumber)
+    alert("Account number copied!")
   }
 
   return (
@@ -100,11 +106,23 @@ const Customer_info = () => {
               {/* Advance Payment Fields */}
               {paymentMethod === 'advance' && (
                 <div className="space-y-3">
-                  <input
-                    type="text"
-                    placeholder="Your Account Number"
-                    className="w-full border p-3 text-xs"
-                  />
+                  {/* Account Number with copy */}
+                  <div className="relative">
+                    <input
+                      type="text"
+                      className="w-full border p-3 text-xs pr-12"
+                      value={accountNumber}
+                      readOnly
+                    />
+                    <button
+                      type="button"
+                      onClick={handleCopyAccount}
+                      className="absolute top-1/2 right-2 -translate-y-1/2 p-1"
+                    >
+                      <Copy size={14} />
+                    </button>
+                  </div>
+                  {/* Screenshot Upload */}
                   <input
                     type="file"
                     accept="image/*"
