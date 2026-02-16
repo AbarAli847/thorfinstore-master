@@ -9,14 +9,16 @@ const BottomNav = () => {
       <div className="max-w-full mx-auto px-6 md:px-14">
 
         {/* UPPER SECTION: Newsletter */}
-        <div className="flex flex-col lg:flex-row justify-between items-center bg-[#000] border border-white/10 rounded-[20px] p-6 md:p-8 mb-10 gap-4">
-          
+        <div className="flex flex-col lg:flex-row justify-between items-center bg-[#000] border border-white/10 rounded-[20px] p-6 md:p-8 mb-10 gap-6">
+
+          {/* Heading */}
           <h2 className="text-xl md:text-2xl font-[1000] leading-tight max-w-[400px] uppercase tracking-tighter text-center lg:text-left">
             STAY UP TO DATE ABOUT OUR LATEST OFFERS
           </h2>
           
-          <div className="flex flex-col sm:flex-row w-full lg:w-auto items-center gap-2 sm:gap-0 bg-white rounded-full overflow-hidden p-1">
-            
+          {/* Input & Button Container */}
+          <div className="flex flex-col sm:flex-col lg:flex-row w-full lg:w-auto gap-4">
+
             {/* Email Input */}
             <div className="flex-1 min-w-0 relative">
               <span className="absolute left-4 top-1/2 -translate-y-1/2 text-black/40">
@@ -27,7 +29,7 @@ const BottomNav = () => {
               <input 
                 type="email" 
                 placeholder="Enter your email address" 
-                className="w-full pl-10 pr-4 py-2 text-black text-xs outline-none bg-transparent rounded-l-full"
+                className="w-full pl-10 pr-4 py-2 text-black bg-white text-xs outline-none rounded-full border border-white/20"
               />
             </div>
 
@@ -35,7 +37,7 @@ const BottomNav = () => {
             <motion.button 
               whileHover={{ scale: 1.02, backgroundColor: '#333' }}
               whileTap={{ scale: 0.98 }}
-              className="w-full sm:w-auto bg-black text-white font-bold py-2 px-6 rounded-full text-[10px] uppercase tracking-wider transition-all"
+              className="w-full lg:w-auto bg-white text-black font-bold py-2 px-6 rounded-full text-xs uppercase"
             >
               Subscribe
             </motion.button>
