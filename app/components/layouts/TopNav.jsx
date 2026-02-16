@@ -15,6 +15,35 @@ const TopNav = () => {
   const [isCartOpen, setIsCartOpen] = useState(false); 
   const [showPromo, setShowPromo] = useState(true);
   
+  // --- LOGIC: Cart State ---
+  const [cartItems, setCartItems] = useState([]);
+
+  // Function to sync cart from localStorage
+  const syncCart = () => {
+    const savedCart = JSON.parse(localStorage.getItem('cart')) || [];
+    setCartItems(savedCart);
+  };
+
+  useEffect(() => {
+    syncCart();  
+    // Listen for changes from other components (Quickview)
+    window.addEventListener('storage', syncCart);
+    const interval = setInterval(syncCart, 1000); // Polling as backup
+    return () => {
+      window.removeEventListener('storage', syncCart);
+      clearInterval(interval);
+    };
+  }, []);
+
+  // Total Price Calculation Logic
+  const totalPrice = cartItems.reduce((acc, item) => {
+    const price = typeof item.price === 'string' 
+      ? parseFloat(item.price.replace(/[^\d.]/g, '')) 
+      : item.price;
+    return acc + (price || 0) * (item.qty || 1);
+  }, 0);
+  // --- END LOGIC ---
+
   const profileRef = useRef(null);
 
   useEffect(() => {
@@ -63,8 +92,6 @@ const TopNav = () => {
 
         {/* 2. Main Nav */}
         <div className="w-full px-4 md:px-10 py-4 flex items-center justify-between">
-  
-          {/* Logo - Left */}
           <div className="flex items-center gap-3">
             <button onClick={() => setIsMobileMenuOpen(true)} className="md:hidden p-2 hover:bg-gray-100 rounded-full">
               <Menu size={24} />
@@ -74,7 +101,6 @@ const TopNav = () => {
             </Link>
           </div>
 
-          {/* Desktop Links - Centered & Larger */}
           <div className="hidden md:flex items-center gap-8 lg:gap-12 absolute left-1/2 -translate-x-1/2">
             <div 
               className="relative py-2 group cursor-pointer flex items-center gap-1 font-bold text-[14px]"
@@ -109,18 +135,20 @@ const TopNav = () => {
             <Link href="/clearence" className="font-bold text-[17px]  text-red-500 transition-colors">clearence</Link>
           </div>
 
-          {/* Icons Area - Right */}
           <div className="flex items-center gap-2 md:gap-4">
-            {/* Basket Icon Trigger */}
             <div 
               onClick={() => setIsCartOpen(true)} 
               className="relative p-2 hover:bg-gray-100 rounded-full cursor-pointer"
             >
               <ShoppingCart size={24} />
-              <span className="absolute top-1 right-1 bg-black text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">3</span>
+              {/* LOGIC: Dynamic Badge Count */}
+              {cartItems.length > 0 && (
+                <span className="absolute top-1 right-1 bg-black text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
+                  {cartItems.length}
+                </span>
+              )}
             </div>
 
-            {/* Profile Dropdown */}
             <div className="relative" ref={profileRef}>
               <button 
                 onClick={() => setIsProfileOpen(!isProfileOpen)}
@@ -184,45 +212,50 @@ const TopNav = () => {
               </div>
               
               <div className="flex-1 overflow-y-auto px-6 py-4 space-y-6">
-                <CartItem 
-                  image="https://5.imimg.com/data5/SELLER/Default/2022/12/SC/TM/SJ/94630792/cotton-ladies-suit.jpg" 
-                  name="White Shirt Pleat" 
-                  price="Rs. 1900" 
-                  qty="1" 
-                />
-                <CartItem 
-                  image="https://5.imimg.com/data5/SELLER/Default/2022/12/SC/TM/SJ/94630792/cotton-ladies-suit.jpg" 
-                  name="Converse All Star" 
-                  price="Rs. 3900" 
-                  qty="1" 
-                />
+                {/* LOGIC: Dynamic Cart Items */}
+                {cartItems.length > 0 ? (
+                  cartItems.map((item, index) => (
+                    <CartItem 
+                      key={index}
+                      image={item.image} 
+                      name={item.name} 
+                      price={item.price} 
+                      qty={item.qty} 
+                    />
+                  ))
+                ) : (
+                  <p className="text-center text-gray-400 mt-10 uppercase text-[10px] tracking-widest">Your bag is empty.</p>
+                )}
               </div>
 
-              <div className="p-6 border-t border-gray-200 mt-auto space-y-4">
-                <div className="text-[16px] text-[#222] flex justify-between">
-                  <span>Total:</span> 
-                  <span className="font-medium font-sans text-lg">Rs. 5800</span>
+              {cartItems.length > 0 && (
+                <div className="p-6 border-t border-gray-200 mt-auto space-y-4">
+                  <div className="text-[16px] text-[#222] flex justify-between">
+                    <span>Total:</span> 
+                    {/* LOGIC: Dynamic Total */}
+                    <span className="font-medium font-sans text-lg">Rs. {totalPrice.toLocaleString()}</span>
+                  </div>
+                  
+                  <div className="flex gap-3 w-full">
+                    <button className="flex-1 bg-white border border-black text-black py-3 rounded-sm text-[11px] font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all duration-300">
+                      View Cart
+                    </button>
+                    <Link
+                      href="/cart"
+                      onClick={() => setIsCartOpen(false)}
+                      className="flex-1 bg-black text-white py-3 rounded-sm text-[11px] font-bold uppercase tracking-widest hover:bg-gray-800 flex items-center justify-center transition-all duration-300"
+                    >
+                      Check Out
+                    </Link>
+                  </div>
                 </div>
-                
-                <div className="flex gap-3 w-full">
-                  <button className="flex-1 bg-white border border-black text-black py-3 rounded-sm text-[11px] font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all duration-300">
-                    View Cart
-                  </button>
-                  <Link
-                    href="/checkout"
-                    onClick={() => setIsCartOpen(false)}
-                    className="flex-1 bg-black text-white py-3 rounded-sm text-[11px] font-bold uppercase tracking-widest hover:bg-gray-800 flex items-center justify-center transition-all duration-300"
-                  >
-                    Check Out
-                  </Link>
-                </div>
-              </div>
+              )}
             </motion.div>
           </>
         )}
       </AnimatePresence>
 
-      {/* Mobile Sidebar */}
+      {/* Mobile Sidebar Logic Same as Before */}
       <AnimatePresence>
           {isMobileMenuOpen && (
             <>

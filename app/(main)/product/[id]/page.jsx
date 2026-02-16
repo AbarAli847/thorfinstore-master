@@ -3,10 +3,13 @@ import React, { useState, useEffect } from 'react';
 import { Plus, Minus, Heart, Eye } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
+import Checkout from '../../checkout/page.jsx'; 
+
 const Quickview = () => {
   const router = useRouter();
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
+  const [isCartOpen, setIsCartOpen] = useState(false);  
   const [accordionOpen, setAccordionOpen] = useState({
     Description: false,
     Details: false,
@@ -27,14 +30,26 @@ const Quickview = () => {
     }
   }, []);
 
-  // Handle Buy It Now → Login Page
   const handleAuthAction = (actionType) => {
     if (actionType === 'buy') {
-      // Sirf Login page pe redirect
       router.push('/login');
     } else if (actionType === 'add') {
-      // Optional: Add to Bag alert
-      alert('Add to Bag clicked!');
+       
+      const existingCart = JSON.parse(localStorage.getItem('cart')) || [];
+      
+      // 2. Naya item set karo
+      const cartProduct = {
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        qty: quantity
+      };
+
+      // 3. Save to localStorage
+      localStorage.setItem('cart', JSON.stringify([...existingCart, cartProduct]));
+
+      
+      setIsCartOpen(true);
     }
   };
 
@@ -54,8 +69,11 @@ const Quickview = () => {
 
   return (
     <div className="bg-gray-100 min-h-screen flex items-center justify-center p-4 md:p-6 font-sans text-[#222]">
-      <div className="max-w-[1100px] w-full mx-auto flex flex-col md:flex-row gap-0 bg-white shadow-sm overflow-hidden rounded-sm">
+      
+      {/* Checkout Drawer: State pass kar di */}
+      <Checkout isCartOpen={isCartOpen} setIsCartOpen={setIsCartOpen} />
 
+      <div className="max-w-[1100px] w-full mx-auto flex flex-col md:flex-row gap-0 bg-white shadow-sm overflow-hidden rounded-sm">
         {/* LEFT: IMAGE SECTION */}
         <div className="w-full md:w-[50%] flex flex-col-reverse md:flex-row gap-3 p-4 md:p-5 bg-white relative">
           <div className="flex flex-row md:flex-col gap-2 overflow-x-auto md:overflow-visible">
@@ -89,16 +107,11 @@ const Quickview = () => {
           <h2 className="text-[22px] md:text-[24px] font-medium uppercase mb-2 leading-tight tracking-tight">{product.name}</h2>
           <p className="text-[20px] text-black mb-6 font-medium">Rs. {product.price}</p>
 
-          <div className="space-y-2 mb-6 text-[13px] border-black/10 pl-4">
-            <p><span className="text-gray-400 uppercase text-[15px] block mb-1">Fabric</span> Premium Cotton</p>
-            <p><span className="text-gray-400 uppercase text-[15px] block mb-1">Fit</span> Regular Style</p>
-          </div>
-
           <div className="flex gap-2 mb-5">
             <div className="flex border border-black/10 items-center h-[45px] bg-gray-50">
-              <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="px-4 transition-colors"><Minus size={14}/></button>
+              <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="px-4"><Minus size={14}/></button>
               <span className="px-2 font-medium w-10 text-center text-sm">{quantity}</span>
-              <button onClick={() => setQuantity(quantity + 1)} className="px-4 transition-colors"><Plus size={14}/></button>
+              <button onClick={() => setQuantity(quantity + 1)} className="px-4"><Plus size={14}/></button>
             </div>
             <button className="flex-1 border border-black/10 flex items-center justify-center hover:bg-black hover:text-white transition-all text-gray-400">
               <Heart size={18}/>
@@ -106,7 +119,6 @@ const Quickview = () => {
           </div>
 
           <div className="space-y-2 mb-6">
-            {/* Action Buttons */}
             <button 
               onClick={() => handleAuthAction('add')}
               className="w-full bg-white border border-black text-black py-3.5 text-[11px] font-medium uppercase tracking-[2px] hover:bg-black hover:text-white transition-all duration-300"
@@ -142,7 +154,7 @@ const Quickview = () => {
       {isImageOpen && (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-[999] p-4">
           <img src={product.image} alt={product.name} className="max-h-full max-w-full object-contain rounded-md" />
-          <button onClick={() => setIsImageOpen(false)} className="absolute top-4 right-4 text-white text-2xl font-bold hover:text-gray-300">&times;</button>
+          <button onClick={() => setIsImageOpen(false)} className="absolute top-4 right-4 text-white text-4xl hover:text-gray-300">&times;</button>
         </div>
       )}
     </div>
