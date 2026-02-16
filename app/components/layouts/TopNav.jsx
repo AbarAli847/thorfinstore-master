@@ -132,7 +132,7 @@ const TopNav = () => {
             
             <Link href="/on-sale" className="font-bold text-[17px] hover:text-gray-500 transition-colors">On Sale</Link>
             <Link href="/newarrivals" className="font-bold text-[17px] hover:text-gray-500 transition-colors">New Arrivals</Link>
-            <Link href="/clearence" className="font-bold text-[17px]  text-red-500 transition-colors">clearence</Link>
+            <Link href="/Clearance" className="font-bold text-[17px]  text-red-500 transition-colors">clearence</Link>
           </div>
 
           <div className="flex items-center gap-2 md:gap-4">

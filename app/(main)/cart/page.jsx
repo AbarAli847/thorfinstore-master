@@ -1,36 +1,35 @@
-'use client'
-import React, { useState } from 'react'
-import { ShieldCheck, Truck, CreditCard, Banknote, Copy } from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
-import Image from 'next/image'
-import Success from '../Success/page'
+"use client";
+import React, { useState } from "react";
+import { ShieldCheck, Truck, CreditCard, Banknote, Copy } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
+import Success from "../Success/page";
 
 const Customer_info = () => {
-  const [paymentMethod, setPaymentMethod] = useState('cod')
-  const [showSuccess, setShowSuccess] = useState(false)
+  const [paymentMethod, setPaymentMethod] = useState("cod");
+  const [showSuccess, setShowSuccess] = useState(false);
 
-  const accountNumber = '1234-5678-9012-3456'
+  const accountNumber = "1234-5678-9012-3456";
 
-  const handlePlaceOrder = () => setShowSuccess(true)
+  const handlePlaceOrder = () => setShowSuccess(true);
   const handleCopyAccount = () => {
-    navigator.clipboard.writeText(accountNumber)
-    alert('Account number copied!')
-  }
+    navigator.clipboard.writeText(accountNumber);
+    alert("Account number copied!");
+  };
 
   // 🔹 Compact input style with reduced width
   const inputStyle =
-    'w-[90%] md:w-[80%] border px-3 py-2 text-[11px] focus:outline-none focus:border-black'
+    "w-[90%] md:w-[80%] border px-3 py-2 text-[11px] focus:outline-none focus:border-black";
 
   // 🔹 Compact button style for COD/Advance
   const buttonStyle = (active) =>
     `w-[90%] md:w-[80%] p-2 border text-[10px] font-bold uppercase flex items-center justify-center gap-1 ${
-      active ? 'bg-black text-white' : 'border-gray-200 text-gray-400'
-    }`
+      active ? "bg-black text-white" : "border-gray-200 text-gray-400"
+    }`;
 
   return (
     <div className="min-h-screen bg-[#f4f4f4] flex items-center justify-center p-4 md:p-10 font-sans text-[#222]">
       <div className="max-w-[1100px] w-full bg-white shadow-2xl flex flex-col md:flex-row overflow-hidden rounded-sm border border-gray-100">
-
         {/* LEFT IMAGES */}
         <div className="w-full md:w-[50%] bg-[#fafafa] p-2 md:p-6 flex gap-2">
           <div className="relative h-[420px] md:h-[450px] flex-1 overflow-hidden group">
@@ -43,7 +42,9 @@ const Customer_info = () => {
             <div className="absolute top-6 right-2 bg-white/90 p-2 rounded-full shadow-lg flex flex-col items-center text-[7px]">
               <Truck size={18} />
               <span className="font-bold uppercase text-center mt-1">
-                Expedited<br />Shipping
+                Expedited
+                <br />
+                Shipping
               </span>
             </div>
           </div>
@@ -58,7 +59,9 @@ const Customer_info = () => {
             <div className="absolute bottom-6 left-2 bg-white/90 p-2 rounded-full shadow-lg flex flex-col items-center text-[7px]">
               <ShieldCheck size={18} />
               <span className="font-bold uppercase text-center mt-1">
-                Secure<br />Payment
+                Secure
+                <br />
+                Payment
               </span>
             </div>
           </div>
@@ -66,8 +69,10 @@ const Customer_info = () => {
 
         {/* RIGHT FORM */}
         <div className="w-full md:w-[50%] p-4 md:p-8 flex flex-col items-center">
-          <form className="flex flex-col gap-2 w-full " onSubmit={(e) => e.preventDefault()}>
-
+          <form
+            className="flex flex-col gap-2 w-full "
+            onSubmit={(e) => e.preventDefault()}
+          >
             {/* SHIPPING */}
             <h3 className="text-[10px] font-black uppercase tracking-[2px] text-gray-400 mb-1">
               Shipping Address
@@ -81,29 +86,32 @@ const Customer_info = () => {
             <h3 className="text-[10px] font-black uppercase tracking-[2px] text-gray-400 mt-2 mb-1">
               Payment Method
             </h3>
-           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 w-full max-w-[400px] mx-auto">
-  <button
-    type="button"
-    onClick={() => setPaymentMethod('cod')}
-    className={buttonStyle(paymentMethod === 'cod')}
-  >
-    <Banknote size={14} /> COD
-  </button>
+            <div className="grid grid-cols-1 sm:grid-cols-2 ml-1 sm:gap-3 w-full max-w-[400px] mx-auto">
+              <button
+                type="button"
+                onClick={() => setPaymentMethod("cod")}
+                className={buttonStyle(paymentMethod === "cod")}
+              >
+                <Banknote size={14} /> COD
+              </button>
 
-  <button
-    type="button"
-    onClick={() => setPaymentMethod('advance')}
-    className={buttonStyle(paymentMethod === 'advance')}
-  >
-    <CreditCard size={14} /> Advance
-  </button>
-</div>
+              <button
+                type="button"
+                onClick={() => setPaymentMethod("advance")}
+                className={buttonStyle(paymentMethod === "advance")}
+              >
+                <CreditCard size={14} /> Advance
+              </button>
+            </div>
 
-
-            {paymentMethod === 'advance' && (
+            {paymentMethod === "advance" && (
               <>
                 <div className="relative mb-1 w-[90%] md:w-[80%]">
-                  <input className="w-full border px-3 py-2 text-[11px] pr-10 focus:outline-none focus:border-black" value={accountNumber} readOnly />
+                  <input
+                    className="w-full border px-3 py-2 text-[11px] pr-10 focus:outline-none focus:border-black"
+                    value={accountNumber}
+                    readOnly
+                  />
                   <button
                     type="button"
                     onClick={handleCopyAccount}
@@ -148,7 +156,7 @@ const Customer_info = () => {
         {showSuccess && <Success onClose={() => setShowSuccess(false)} />}
       </AnimatePresence>
     </div>
-  )
-}
+  );
+};
 
-export default Customer_info
+export default Customer_info;
